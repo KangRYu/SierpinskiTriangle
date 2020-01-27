@@ -18,7 +18,7 @@ ArrayList<Triangle> allTriangles = new ArrayList<Triangle>();
 ArrayList<Triangle> trianglesToBeAdded = new ArrayList<Triangle>();
 ArrayList<Triangle> trianglesToBeRemoved = new ArrayList<Triangle>();
 
-float maxTriangleLength = 30;
+float maxTriangleLength = 10;
 float zoomAmount = 1.01f;
 PVector zoomPoint;
 
@@ -27,11 +27,13 @@ public void setup()
     
     // Spawn triangles
     allTriangles.add(new Triangle(width/2, height/2, 100)); // Spawn first triangle
-    updateTriangles();
-    // Pick random target
+    while(allTriangles.get(0).getLength() > maxTriangleLength) { // Makes spawns the rest of the triangles
+        updateTriangles();
+    }
+    // Pick Random Point
     int numOfTriangles = allTriangles.size();
-    int targetIndex = (int)(Math.random() * numOfTriangles);
-    zoomPoint = allTriangles.get(targetIndex).getPosition();
+    int triangleIndex = (int)(Math.random() * numOfTriangles);
+    zoomPoint = allTriangles.get(triangleIndex).getLeftCorner();
 }
 public void draw()
 {
@@ -49,7 +51,6 @@ public void zoom(float amount, PVector point) { // Zooms in all triangles
     for(Triangle tri : allTriangles) {
         tri.zoom(amount, point);
     }
-    point.add(new PVector(1 - amount, 0));
 }
 public void updateTriangles() {
     // Updates every triangle
@@ -80,13 +81,28 @@ class Triangle {
         // Calculate corners
         calcCorners();
     }
-    public PVector getPosition() {
-        return position;
+    public PVector getLeftCorner() {
+        return leftCorner;
+    }
+    public PVector getRightCorner() {
+        return rightCorner;
+    }
+    public PVector getTopCorner() {
+        return topCorner;
+    }
+    public float getLength() {
+        return length;
     }
     public void update() {
         show();
         if(length >= maxTriangleLength) { // Split triangle if it is too big
             split();
+        }
+        if(rightCorner.x < 0 || leftCorner.x > width) {
+            removeTriangle(this);
+        }
+        if(rightCorner.y < 0 || topCorner.y > height) {
+            removeTriangle(this);
         }
     }
     public void zoom(float amount, PVector point) { // Reposition and rescales triangle based on scale factor and scale point
