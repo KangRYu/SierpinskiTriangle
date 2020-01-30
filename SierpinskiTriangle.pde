@@ -1,12 +1,15 @@
+// Object arrays
 ArrayList<Triangle> allTriangles = new ArrayList<Triangle>();
 ArrayList<Triangle> trianglesToBeAdded = new ArrayList<Triangle>();
 ArrayList<Triangle> trianglesToBeRemoved = new ArrayList<Triangle>();
 
-float maxTriangleLength = 10;
-float currentTriangleLength = 100;
+// Triangle states
+float maxTriangleLength = 10; // The largest possible triangle in length
+float currentTriangleLength = 100; // The current length
+PVector zoomPoint; // The point the triangle is zooming into
+// Settings
 float zoomAmount = 1.01;
-float fadeInAmount = 0;
-PVector zoomPoint;
+float fadeAmount = log(2)/log(zoomAmount);
 
 public void setup()
 {
@@ -37,18 +40,11 @@ public void spawnTriangle(float x, float y, float argLength) {
     trianglesToBeAdded.add(temp);
 }
 
-public void removeTriangle(Triangle ref) {
-    trianglesToBeRemoved.add(ref);
-}
-
 public void zoom(float amount, PVector point) { // Zooms in all triangles
     for(Triangle tri : allTriangles) {
         tri.zoom(amount, point);
     }
     currentTriangleLength *= amount; // Update the current triangle length variable
-}
-
-public void checkLength() { // Checks if the triangles are too big or not
 }
 
 public void updateTriangles() {
@@ -80,103 +76,5 @@ public void splitAllTriangles() {
 public void fadeOutAll() {
     for(Triangle tri : allTriangles) {
         tri.fadeOut();
-    }
-}
-
-class Triangle {
-    private PVector position;
-    private float length; // The lenth of each corner from the center of the triangle
-    private PVector topCorner;
-    private PVector rightCorner;
-    private PVector leftCorner;
-    // The colors of the triangle
-    private float r;
-    private float g;
-    private float b;
-    private float a;
-    private boolean fadingIn = true;
-    private boolean fadingOut = false;
-    public Triangle(float x, float y, float argLength) {
-        // Save arguments
-        position = new PVector(x, y);
-        length = argLength;
-        // Calculate corners
-        calcCorners();
-    }
-    public void setColor() { // Set color function with no arguments that picks a random color
-        r = (float)(Math.random() * 255);
-        g = (float)(Math.random() * 255);
-        b = (float)(Math.random() * 255);
-        a = 255;
-    }
-    public void setColor(float argR, float argG, float argB) {
-        r = argR;
-        g = argG;
-        b = argB;
-        a = 255;
-    }
-    public PVector getLeftCorner() {
-        return leftCorner;
-    }
-    public PVector getRightCorner() {
-        return rightCorner;
-    }
-    public PVector getTopCorner() {
-        return topCorner;
-    }
-    public float getLength() {
-        return length;
-    }
-    public boolean isFadingIn() {
-        return fadingIn;
-    }
-    public boolean isFadingOut() {
-        return fadingOut;
-    }
-    public void fadeOut() {
-        fadingIn = false;
-        fadingOut = true;
-    }
-    public void update() {
-        show();
-        if(fadingIn) {
-        }
-        if(fadingOut) {
-            a -= 5; // Decrement alpha
-            if(a <= 0) { // Delete triangle if it is invisible
-                removeTriangle(this);
-            }
-        }
-        if(rightCorner.x < 0 || leftCorner.x > width) {
-            removeTriangle(this);
-        }
-        if(rightCorner.y < 0 || topCorner.y > height) {
-            removeTriangle(this);
-        }
-    }
-    public void zoom(float amount, PVector point) { // Reposition and rescales triangle based on scale factor and scale point
-        PVector difference = PVector.sub(position, point);
-        difference.mult(amount - 1);
-        position.add(difference);
-        length *= amount;
-        calcCorners();
-    }
-    private void calcCorners() { // Calculate corners
-        topCorner = PVector.add(position, new PVector(length, 0).rotate(-PI/2));
-        rightCorner = PVector.add(position, new PVector(length, 0).rotate(PI/6));
-        leftCorner = PVector.add(position, new PVector(length, 0).rotate(-7 * PI/6));
-    }
-    private void split() { // Split the triangle into 3 smaller pieces
-        // Spawn new children triangles
-        PVector tempPosition = PVector.add(position, new PVector(length/2, 0).rotate(-PI/2));
-        spawnTriangle(tempPosition.x, tempPosition.y, length/2);
-        tempPosition = PVector.add(position, new PVector(length/2, 0).rotate(PI/6));
-        spawnTriangle(tempPosition.x, tempPosition.y, length/2);
-        tempPosition = PVector.add(position, new PVector(length/2, 0).rotate(-7 * PI/6));
-        spawnTriangle(tempPosition.x, tempPosition.y, length/2);
-    }
-    private void show() {
-        fill(r, g, b, a);
-        triangle(topCorner.x, topCorner.y, leftCorner.x, leftCorner.y, rightCorner.x, rightCorner.y);
     }
 }

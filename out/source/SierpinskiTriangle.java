@@ -21,6 +21,7 @@ ArrayList<Triangle> trianglesToBeRemoved = new ArrayList<Triangle>();
 float maxTriangleLength = 10;
 float currentTriangleLength = 100;
 float zoomAmount = 1.01f;
+float fadeAmount = log(2)/log(zoomAmount);
 PVector zoomPoint;
 
 public void setup()
@@ -42,7 +43,7 @@ public void draw()
     zoom(zoomAmount, zoomPoint);
     if(currentTriangleLength > maxTriangleLength) {
         splitAllTriangles();
-        fadeAll();
+        fadeOutAll();
     }
 }
 
@@ -61,9 +62,6 @@ public void zoom(float amount, PVector point) { // Zooms in all triangles
         tri.zoom(amount, point);
     }
     currentTriangleLength *= amount; // Update the current triangle length variable
-}
-
-public void checkLength() { // Checks if the triangles are too big or not
 }
 
 public void updateTriangles() {
@@ -85,19 +83,18 @@ public void updateTriangles() {
 
 public void splitAllTriangles() {
     for(Triangle tri : allTriangles) {
-        if(!tri.isFading()) {
+        if(!tri.isFadingOut()) {
             tri.split();
         }
     }
     currentTriangleLength /= 2;
 }
 
-public void fadeAll() {
+public void fadeOutAll() {
     for(Triangle tri : allTriangles) {
-        tri.fade();
+        tri.fadeOut();
     }
 }
-
 class Triangle {
     private PVector position;
     private float length; // The lenth of each corner from the center of the triangle
@@ -109,7 +106,8 @@ class Triangle {
     private float g;
     private float b;
     private float a;
-    private boolean fading = false;
+    private boolean fadingIn = true;
+    private boolean fadingOut = false;
     public Triangle(float x, float y, float argLength) {
         // Save arguments
         position = new PVector(x, y);
@@ -121,13 +119,13 @@ class Triangle {
         r = (float)(Math.random() * 255);
         g = (float)(Math.random() * 255);
         b = (float)(Math.random() * 255);
-        a = 255;
+        a = 0;
     }
     public void setColor(float argR, float argG, float argB) {
         r = argR;
         g = argG;
         b = argB;
-        a = 255;
+        a = 0;
     }
     public PVector getLeftCorner() {
         return leftCorner;
@@ -141,16 +139,23 @@ class Triangle {
     public float getLength() {
         return length;
     }
-    public boolean isFading() {
-        return fading;
+    public boolean isFadingIn() {
+        return fadingIn;
     }
-    public void fade() {
-        fading = true;
+    public boolean isFadingOut() {
+        return fadingOut;
+    }
+    public void fadeOut() {
+        fadingIn = false;
+        fadingOut = true;
     }
     public void update() {
         show();
-        if(fading) {
-            a -= 5; // Decrement alpha
+        if(fadingIn) {
+            a += fadeAmount; // Increment alpha
+        }
+        if(fadingOut) {
+            a -= fadeAmount; // Decrement alpha
             if(a <= 0) { // Delete triangle if it is invisible
                 removeTriangle(this);
             }
