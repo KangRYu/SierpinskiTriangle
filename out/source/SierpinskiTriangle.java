@@ -20,8 +20,8 @@ ArrayList<Triangle> trianglesToBeAdded = new ArrayList<Triangle>();
 ArrayList<Triangle> trianglesToBeRemoved = new ArrayList<Triangle>();
 
 // Triangle states
-float maxTriangleLength = 10; // The largest possible triangle in length
-float currentTriangleLength = 80; // The current length
+float maxTriangleLength = 80; // The largest possible triangle in length
+float currentTriangleLength = 320; // The current length
 PVector zoomPoint; // The point the triangle is zooming into
 // Settings
 float zoomAmount = 1.01f; // The rate at which the triangles are zooming in
@@ -32,10 +32,8 @@ public void setup() {
     // Spawn triangles
     allTriangles.add(new Triangle(width/2, height/2, currentTriangleLength)); // Spawn first triangle
     allTriangles.get(0).setColor();
-    // Pick Random Point
-    int numOfTriangles = allTriangles.size();
-    int triangleIndex = (int)(Math.random() * numOfTriangles);
-    zoomPoint = allTriangles.get(triangleIndex).getLeftCorner();
+    // Pick Zoom Point
+    zoomPoint = allTriangles.get(0).getLeftCorner();
 }
 
 public void draw() {
@@ -215,8 +213,42 @@ class Triangle { // A triangle object
         fadingOut = true;
     }
 }
-class Vector {
-    
+static class Vector {
+    public double x;
+    public double y;
+
+    // Constructors
+    public Vector() { // Creates an empty vector if no arguments are given
+        x = 0;
+        y = 0;
+    }
+    public Vector(double argX, double argY) {
+        x = argX;
+        y = argY;
+    }
+
+    // Public functions
+    public void add(Vector input) { // Adds the inputed vector into this vector
+        x += input.x;
+        y += input.y;
+    }
+    public static Vector add(Vector input, Vector input2) { // A static function for adding two vectors
+        double tempX = input.x + input2.x;
+        double tempY = input.y + input2.y;
+        return new Vector(tempX, tempY);
+    }
+    public void rotate(double angle) {
+        double tempX;
+        double tempY;
+    }
+
+    // Getters
+    public float fx() { // Returns the x as a float
+        return (float)x;
+    }
+    public float fy() {
+        return (float)y;
+    }
 }
   public void settings() {  size(500, 500); }
   static public void main(String[] passedArgs) {

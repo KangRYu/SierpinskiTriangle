@@ -4,8 +4,8 @@ ArrayList<Triangle> trianglesToBeAdded = new ArrayList<Triangle>();
 ArrayList<Triangle> trianglesToBeRemoved = new ArrayList<Triangle>();
 
 // Triangle states
-float maxTriangleLength = 10; // The largest possible triangle in length
-float currentTriangleLength = 80; // The current length
+float maxTriangleLength = 80; // The largest possible triangle in length
+float currentTriangleLength = 320; // The current length
 PVector zoomPoint; // The point the triangle is zooming into
 // Settings
 float zoomAmount = 1.01; // The rate at which the triangles are zooming in
@@ -16,10 +16,8 @@ public void setup() {
     // Spawn triangles
     allTriangles.add(new Triangle(width/2, height/2, currentTriangleLength)); // Spawn first triangle
     allTriangles.get(0).setColor();
-    // Pick Random Point
-    int numOfTriangles = allTriangles.size();
-    int triangleIndex = (int)(Math.random() * numOfTriangles);
-    zoomPoint = allTriangles.get(triangleIndex).getLeftCorner();
+    // Pick Zoom Point
+    zoomPoint = allTriangles.get(0).getLeftCorner();
 }
 
 public void draw() {
