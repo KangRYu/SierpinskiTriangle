@@ -9,7 +9,7 @@ float currentTriangleLength = 80; // The current length
 PVector zoomPoint; // The point the triangle is zooming into
 // Settings
 float zoomAmount = 1.01; // The rate at which the triangles are zooming in
-float fadeAmount = 20; // The rate at which the triangles are fading
+float fadeAmount = 5; // The rate at which the triangles are fading
 
 public void setup() {
     size(500, 500);

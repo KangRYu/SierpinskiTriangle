@@ -25,7 +25,7 @@ float currentTriangleLength = 80; // The current length
 PVector zoomPoint; // The point the triangle is zooming into
 // Settings
 float zoomAmount = 1.01f; // The rate at which the triangles are zooming in
-float fadeAmount = 20; // The rate at which the triangles are fading
+float fadeAmount = 5; // The rate at which the triangles are fading
 
 public void setup() {
     
@@ -214,6 +214,9 @@ class Triangle { // A triangle object
         fadingIn = false;
         fadingOut = true;
     }
+}
+class Vector {
+    
 }
   public void settings() {  size(500, 500); }
   static public void main(String[] passedArgs) {
