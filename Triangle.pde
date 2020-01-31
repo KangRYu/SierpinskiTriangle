@@ -38,16 +38,8 @@ class Triangle { // A triangle object
     // Public call classes
     public void update() {
         show();
-        if(fadingIn) {
-            a += fadeAmount; // Increment alpha
-        }
-        if(fadingOut) {
-            a -= fadeAmount; // Decrement alpha
-            if(a <= 0) { // Delete triangle if it is invisible
-                delete();
-            }
-        }
-        if(!visibile) { // If not visibile, delete the triangle
+        updateFade();
+        if(!visible()) { // If not visibile, delete the triangle
             delete();
         }
     }
@@ -63,14 +55,28 @@ class Triangle { // A triangle object
     }
 
     // Private functions
+    private void updateFade() { // Updates the alpha
+        if(a < 255 && fadingIn) {
+            a += fadeAmount; // Increment alpha
+            if(a > 255) {
+                a = 255;
+            }
+        }
+        if(fadingOut) {
+            a -= fadeAmount; // Decrement alpha
+            if(a <= 0) { // Delete triangle if it is invisible
+                delete();
+            }
+        }
+    }
     private boolean visible() { // Check if the triangle is still within the screen
         if(rightCorner.x < 0 || leftCorner.x > width) {
-            return true;
+            return false;
         }
         if(rightCorner.y < 0 || topCorner.y > height) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
     private void calcCorners() { // Calculate corners
         topCorner = PVector.add(position, new PVector(length, 0).rotate(-PI/2));

@@ -5,14 +5,13 @@ ArrayList<Triangle> trianglesToBeRemoved = new ArrayList<Triangle>();
 
 // Triangle states
 float maxTriangleLength = 10; // The largest possible triangle in length
-float currentTriangleLength = 100; // The current length
+float currentTriangleLength = 80; // The current length
 PVector zoomPoint; // The point the triangle is zooming into
 // Settings
-float zoomAmount = 1.01;
-float fadeAmount = log(2)/log(zoomAmount);
+float zoomAmount = 1.01; // The rate at which the triangles are zooming in
+float fadeAmount = 20; // The rate at which the triangles are fading
 
-public void setup()
-{
+public void setup() {
     size(500, 500);
     // Spawn triangles
     allTriangles.add(new Triangle(width/2, height/2, currentTriangleLength)); // Spawn first triangle
@@ -23,8 +22,7 @@ public void setup()
     zoomPoint = allTriangles.get(triangleIndex).getLeftCorner();
 }
 
-public void draw()
-{
+public void draw() {
     background(100); // Redraws background
     updateTriangles();
     zoom(zoomAmount, zoomPoint);
