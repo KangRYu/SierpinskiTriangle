@@ -13,15 +13,20 @@ float fadeAmount = 5; // The rate at which the triangles are fading
 
 public void setup() {
     size(500, 500);
+    noStroke();
     // Spawn triangles
     allTriangles.add(new Triangle(width/2, height/2, currentTriangleLength)); // Spawn first triangle
     allTriangles.get(0).setColor();
-    // Pick Zoom Point
-    zoomPoint = allTriangles.get(0).getLeftCorner();
+    // Load a blank zoom point
+    zoomPoint = new PVector();
 }
 
 public void draw() {
-    background(100); // Redraws background
+    background(30); // Redraws background
+    // Update zoom point
+    zoomPoint.x = mouseX;
+    zoomPoint.y = mouseY;
+    // Updates the triangles
     updateTriangles();
     zoom(zoomAmount, zoomPoint);
     if(currentTriangleLength > maxTriangleLength) {

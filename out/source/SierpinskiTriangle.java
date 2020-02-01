@@ -29,15 +29,19 @@ float fadeAmount = 5; // The rate at which the triangles are fading
 
 public void setup() {
     
+    noStroke();
     // Spawn triangles
     allTriangles.add(new Triangle(width/2, height/2, currentTriangleLength)); // Spawn first triangle
     allTriangles.get(0).setColor();
-    // Pick Zoom Point
-    zoomPoint = allTriangles.get(0).getLeftCorner();
+    // Load a blank zoom point
+    zoomPoint = new PVector();
 }
 
 public void draw() {
-    background(100); // Redraws background
+    background(30); // Redraws background
+    // Update zoom point
+    zoomPoint.x = mouseX;
+    zoomPoint.y = mouseY;
     updateTriangles();
     zoom(zoomAmount, zoomPoint);
     if(currentTriangleLength > maxTriangleLength) {
@@ -211,43 +215,6 @@ class Triangle { // A triangle object
     public void fadeOut() { // Transitions triangle from fading in to fading out
         fadingIn = false;
         fadingOut = true;
-    }
-}
-static class Vector {
-    public double x;
-    public double y;
-
-    // Constructors
-    public Vector() { // Creates an empty vector if no arguments are given
-        x = 0;
-        y = 0;
-    }
-    public Vector(double argX, double argY) {
-        x = argX;
-        y = argY;
-    }
-
-    // Public functions
-    public void add(Vector input) { // Adds the inputed vector into this vector
-        x += input.x;
-        y += input.y;
-    }
-    public static Vector add(Vector input, Vector input2) { // A static function for adding two vectors
-        double tempX = input.x + input2.x;
-        double tempY = input.y + input2.y;
-        return new Vector(tempX, tempY);
-    }
-    public void rotate(double angle) {
-        double tempX;
-        double tempY;
-    }
-
-    // Getters
-    public float fx() { // Returns the x as a float
-        return (float)x;
-    }
-    public float fy() {
-        return (float)y;
     }
 }
   public void settings() {  size(500, 500); }
