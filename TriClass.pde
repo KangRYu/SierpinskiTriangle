@@ -79,9 +79,27 @@ class TriClass { // A triangle object
         return true;
     }
     private void calcCorners() { // Calculate corners
-        topCorner = PVector.add(pos, new PVector(length, 0).rotate(-PI/2));
-        rightCorner = PVector.add(pos, new PVector(length, 0).rotate(PI/6));
-        leftCorner = PVector.add(pos, new PVector(length, 0).rotate(-7 * PI/6));
+        PVector temp = new PVector(pos.x, pos.y);
+        PVector temp2 = new PVector(length, 0).rotate(-PI/2);
+        temp.x += temp2.x;
+        temp.y += temp2.y;
+        topCorner = temp;
+
+        temp = new PVector(pos.x, pos.y);
+        temp2 = new PVector(length, 0).rotate(PI/6);
+        temp.x += temp2.x;
+        temp.y += temp2.y;
+        rightCorner = temp;
+
+        temp = new PVector(pos.x, pos.y);
+        temp2 = new PVector(length, 0).rotate(-7 * PI/6);
+        temp.x += temp2.x;
+        temp.y += temp2.y;
+        leftCorner = temp;
+
+        //topCorner = PVector.add(pos, new PVector(length, 0).rotate(-PI/2));
+        //rightCorner = PVector.add(pos, new PVector(length, 0).rotate(PI/6));
+        //leftCorner = PVector.add(pos, new PVector(length, 0).rotate(-7 * PI/6));
     }
     private void split() { // Split the triangle into 3 smaller pieces
         // Spawn new children triangles
