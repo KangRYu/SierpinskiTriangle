@@ -6,7 +6,7 @@ ArrayList<TriClass> trianglesToBeRemoved = new ArrayList<TriClass>();
 // Triangle states
 float maxTriangleLength = 80; // The largest possible triangle in length
 float currentTriangleLength = 320; // The current length
-PVector zoomPoint; // The point the triangle is zooming into
+Vect zoomPoint; // The point the triangle is zooming into
 // Settings
 float zoomAmount = 1.01; // The rate at which the triangles are zooming in
 float fadeAmount = 5; // The rate at which the triangles are fading
@@ -18,7 +18,7 @@ public void setup() {
     allTriangles.add(new TriClass(width/2, height/2, currentTriangleLength)); // Spawn first triangle
     allTriangles.get(0).setColor();
     // Load a blank zoom point
-    zoomPoint = new PVector(0, 0);
+    zoomPoint = new Vect(0, 0);
 }
 
 public void draw() {
@@ -41,7 +41,7 @@ public void spawnTriangle(float x, float y, float argLength) {
     trianglesToBeAdded.add(temp);
 }
 
-public void zoom(float amount, PVector point) { // Zooms in all triangles
+public void zoom(float amount, Vect point) { // Zooms in all triangles
     for(TriClass tri : allTriangles) {
         tri.zoom(amount, point);
     }

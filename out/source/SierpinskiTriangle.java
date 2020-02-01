@@ -22,7 +22,7 @@ ArrayList<TriClass> trianglesToBeRemoved = new ArrayList<TriClass>();
 // Triangle states
 float maxTriangleLength = 80; // The largest possible triangle in length
 float currentTriangleLength = 320; // The current length
-PVector zoomPoint; // The point the triangle is zooming into
+Vect zoomPoint; // The point the triangle is zooming into
 // Settings
 float zoomAmount = 1.01f; // The rate at which the triangles are zooming in
 float fadeAmount = 5; // The rate at which the triangles are fading
@@ -34,7 +34,7 @@ public void setup() {
     allTriangles.add(new TriClass(width/2, height/2, currentTriangleLength)); // Spawn first triangle
     allTriangles.get(0).setColor();
     // Load a blank zoom point
-    zoomPoint = new PVector(0, 0);
+    zoomPoint = new Vect(0, 0);
 }
 
 public void draw() {
@@ -57,7 +57,7 @@ public void spawnTriangle(float x, float y, float argLength) {
     trianglesToBeAdded.add(temp);
 }
 
-public void zoom(float amount, PVector point) { // Zooms in all triangles
+public void zoom(float amount, Vect point) { // Zooms in all triangles
     for(TriClass tri : allTriangles) {
         tri.zoom(amount, point);
     }
@@ -97,11 +97,11 @@ public void fadeOutAll() {
 }
 class TriClass { // A triangle object
     // Position Properties
-    private PVector pos;
+    private Vect pos;
     private float len; // The lenth of each corner from the center of the triangle
-    private PVector topCorner;
-    private PVector rightCorner;
-    private PVector leftCorner;
+    private Vect topCorner;
+    private Vect rightCorner;
+    private Vect leftCorner;
     // The colors of the triangle
     private float r;
     private float g;
@@ -114,7 +114,7 @@ class TriClass { // A triangle object
     // Initialization functions
     public TriClass(float x, float y, float argLength) {
         // Save arguments
-        pos = new PVector(x, y);
+        pos = new Vect(x, y);
         len = argLength;
         // Calculate corners
         calcCorners();
@@ -134,8 +134,9 @@ class TriClass { // A triangle object
             delete();
         }
     }
-    public void zoom(float amount, PVector point) { // Reposition and rescales triangle based on scale factor and scale point
-        PVector difference = PVector.sub(pos, point);
+    public void zoom(float amount, Vect point) { // Reposition and rescales triangle based on scale factor and scale point
+        Vect difference = pos.clone();
+        difference.sub(point);
         difference.mult(amount - 1);
         pos.add(difference);
         len *= amount;
@@ -170,36 +171,53 @@ class TriClass { // A triangle object
         return true;
     }
     private void calcCorners() { // Calculate corners
-        PVector temp = new PVector(pos.x, pos.y);
-        PVector temp2 = new PVector(len, 0).rotate(-PI/2);
-        temp.x += temp2.x;
-        temp.y += temp2.y;
-        topCorner = temp;
-
-        temp = new PVector(pos.x, pos.y);
-        temp2 = new PVector(len, 0).rotate(PI/6);
-        temp.x += temp2.x;
-        temp.y += temp2.y;
-        rightCorner = temp;
-
-        temp = new PVector(pos.x, pos.y);
-        temp2 = new PVector(len, 0).rotate(-7 * PI/6);
-        temp.x += temp2.x;
-        temp.y += temp2.y;
-        leftCorner = temp;
-
         //topCorner = PVector.add(pos, new PVector(len, 0).rotate(-PI/2));
         //rightCorner = PVector.add(pos, new PVector(len, 0).rotate(PI/6));
         //leftCorner = PVector.add(pos, new PVector(len, 0).rotate(-7 * PI/6));
+        Vect tempPos = pos.clone();
+        Vect dis = new Vect(len, 0);
+        dis.rotateTo(-PI/2);
+        tempPos.add(dis);
+        topCorner = tempPos;
+
+        tempPos = pos.clone();
+        dis = new Vect(len, 0);
+        dis.rotateTo(PI/6);
+        tempPos.add(dis);
+        rightCorner = tempPos;
+
+        tempPos = pos.clone();
+        dis = new Vect(len, 0);
+        dis.rotateTo(-7 * PI/6);
+        tempPos.add(dis);
+        leftCorner = tempPos;
     }
     private void split() { // Split the triangle into 3 smaller pieces
         // Spawn new children triangles
-        PVector tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-PI/2));
-        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
-        tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(PI/6));
-        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
-        tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-7 * PI/6));
-        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
+        Vect tempPos = pos.clone();
+        Vect dis = new Vect(len/2, 0);
+        dis.rotateTo(-PI/2);
+        tempPos.add(dis);
+        spawnTriangle(tempPos.x, tempPos.y, len/2);
+
+        tempPos = pos.clone();
+        dis = new Vect(len/2, 0);
+        dis.rotateTo(PI/6);
+        tempPos.add(dis);
+        spawnTriangle(tempPos.x, tempPos.y, len/2);
+
+        tempPos = pos.clone();
+        dis = new Vect(len/2, 0);
+        dis.rotateTo(-7 * PI/6);
+        tempPos.add(dis);
+        spawnTriangle(tempPos.x, tempPos.y, len/2);
+        
+        //Vect tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-PI/2));
+        //spawnTriangle(tempPosition.x, tempPosition.y, len/2);
+        //tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(PI/6));
+        //spawnTriangle(tempPosition.x, tempPosition.y, len/2);
+        //tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-7 * PI/6));
+        //spawnTriangle(tempPosition.x, tempPosition.y, len/2);
     }
     private void show() {
         fill(r, g, b, a);
@@ -207,13 +225,13 @@ class TriClass { // A triangle object
     }
 
     // Setters and getters
-    public PVector getLeftCorner() {
+    public Vect getLeftCorner() {
         return leftCorner;
     }
-    public PVector getRightCorner() {
+    public Vect getRightCorner() {
         return rightCorner;
     }
-    public PVector getTopCorner() {
+    public Vect getTopCorner() {
         return topCorner;
     }
     public float getLength() {
@@ -230,6 +248,41 @@ class TriClass { // A triangle object
         fadingOut = true;
     }
 }
+class Vect {
+    public float x;
+    public float y;
+
+    // Constructors
+    public Vect(float argX, float argY) {
+        x = argX;
+        y = argY;
+    }
+
+    // Public functions
+    public void add(Vect input) { // Adds the inputed vector into this vector
+        x += input.x;
+        y += input.y;
+    }
+    public void sub(Vect input) {
+        x -= input.x;
+        y -= input.y;
+    }
+    public Vect clone() {
+        return new Vect(x, y);
+    }
+    public void mult(float mag) { // Scales vector
+        float angle = atan2(y, x);
+        float len = sqrt(pow(x, 2) + pow(y, 2));
+        len *= mag;
+        x = cos(angle) * len;
+        y = sin(angle) * len;
+    }
+    public void rotateTo(float angle) {
+        float len = sqrt(pow(x, 2) + pow(y, 2));
+        x = cos(angle) * len;
+        y = sin(angle) * len;
+    }
+} 
   public void settings() {  size(500, 500); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "SierpinskiTriangle" };

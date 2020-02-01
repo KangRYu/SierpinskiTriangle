@@ -1,10 +1,10 @@
 class TriClass { // A triangle object
     // Position Properties
-    private PVector pos;
+    private Vect pos;
     private float len; // The lenth of each corner from the center of the triangle
-    private PVector topCorner;
-    private PVector rightCorner;
-    private PVector leftCorner;
+    private Vect topCorner;
+    private Vect rightCorner;
+    private Vect leftCorner;
     // The colors of the triangle
     private float r;
     private float g;
@@ -17,7 +17,7 @@ class TriClass { // A triangle object
     // Initialization functions
     public TriClass(float x, float y, float argLength) {
         // Save arguments
-        pos = new PVector(x, y);
+        pos = new Vect(x, y);
         len = argLength;
         // Calculate corners
         calcCorners();
@@ -37,8 +37,9 @@ class TriClass { // A triangle object
             delete();
         }
     }
-    public void zoom(float amount, PVector point) { // Reposition and rescales triangle based on scale factor and scale point
-        PVector difference = PVector.sub(pos, point);
+    public void zoom(float amount, Vect point) { // Reposition and rescales triangle based on scale factor and scale point
+        Vect difference = pos.clone();
+        difference.sub(point);
         difference.mult(amount - 1);
         pos.add(difference);
         len *= amount;
@@ -73,36 +74,53 @@ class TriClass { // A triangle object
         return true;
     }
     private void calcCorners() { // Calculate corners
-        PVector temp = new PVector(pos.x, pos.y);
-        PVector temp2 = new PVector(len, 0).rotate(-PI/2);
-        temp.x += temp2.x;
-        temp.y += temp2.y;
-        topCorner = temp;
-
-        temp = new PVector(pos.x, pos.y);
-        temp2 = new PVector(len, 0).rotate(PI/6);
-        temp.x += temp2.x;
-        temp.y += temp2.y;
-        rightCorner = temp;
-
-        temp = new PVector(pos.x, pos.y);
-        temp2 = new PVector(len, 0).rotate(-7 * PI/6);
-        temp.x += temp2.x;
-        temp.y += temp2.y;
-        leftCorner = temp;
-
         //topCorner = PVector.add(pos, new PVector(len, 0).rotate(-PI/2));
         //rightCorner = PVector.add(pos, new PVector(len, 0).rotate(PI/6));
         //leftCorner = PVector.add(pos, new PVector(len, 0).rotate(-7 * PI/6));
+        Vect tempPos = pos.clone();
+        Vect dis = new Vect(len, 0);
+        dis.rotateTo(-PI/2);
+        tempPos.add(dis);
+        topCorner = tempPos;
+
+        tempPos = pos.clone();
+        dis = new Vect(len, 0);
+        dis.rotateTo(PI/6);
+        tempPos.add(dis);
+        rightCorner = tempPos;
+
+        tempPos = pos.clone();
+        dis = new Vect(len, 0);
+        dis.rotateTo(-7 * PI/6);
+        tempPos.add(dis);
+        leftCorner = tempPos;
     }
     private void split() { // Split the triangle into 3 smaller pieces
         // Spawn new children triangles
-        PVector tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-PI/2));
-        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
-        tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(PI/6));
-        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
-        tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-7 * PI/6));
-        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
+        Vect tempPos = pos.clone();
+        Vect dis = new Vect(len/2, 0);
+        dis.rotateTo(-PI/2);
+        tempPos.add(dis);
+        spawnTriangle(tempPos.x, tempPos.y, len/2);
+
+        tempPos = pos.clone();
+        dis = new Vect(len/2, 0);
+        dis.rotateTo(PI/6);
+        tempPos.add(dis);
+        spawnTriangle(tempPos.x, tempPos.y, len/2);
+
+        tempPos = pos.clone();
+        dis = new Vect(len/2, 0);
+        dis.rotateTo(-7 * PI/6);
+        tempPos.add(dis);
+        spawnTriangle(tempPos.x, tempPos.y, len/2);
+        
+        //Vect tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-PI/2));
+        //spawnTriangle(tempPosition.x, tempPosition.y, len/2);
+        //tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(PI/6));
+        //spawnTriangle(tempPosition.x, tempPosition.y, len/2);
+        //tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-7 * PI/6));
+        //spawnTriangle(tempPosition.x, tempPosition.y, len/2);
     }
     private void show() {
         fill(r, g, b, a);
@@ -110,13 +128,13 @@ class TriClass { // A triangle object
     }
 
     // Setters and getters
-    public PVector getLeftCorner() {
+    public Vect getLeftCorner() {
         return leftCorner;
     }
-    public PVector getRightCorner() {
+    public Vect getRightCorner() {
         return rightCorner;
     }
-    public PVector getTopCorner() {
+    public Vect getTopCorner() {
         return topCorner;
     }
     public float getLength() {
