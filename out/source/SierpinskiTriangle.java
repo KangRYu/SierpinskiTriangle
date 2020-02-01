@@ -97,8 +97,8 @@ public void fadeOutAll() {
 }
 class TriClass { // A triangle object
     // Position Properties
-    private PVector position;
-    private float length; // The lenth of each corner from the center of the triangle
+    private PVector pos;
+    private float len; // The lenth of each corner from the center of the triangle
     private PVector topCorner;
     private PVector rightCorner;
     private PVector leftCorner;
@@ -114,21 +114,15 @@ class TriClass { // A triangle object
     // Initialization functions
     public TriClass(float x, float y, float argLength) {
         // Save arguments
-        position = new PVector(x, y);
-        length = argLength;
+        pos = new PVector(x, y);
+        len = argLength;
         // Calculate corners
         calcCorners();
     }
-    public void setColor() { // Set color function with no arguments that picks a random color
+    public void setColor() {
         r = (float)(Math.random() * 255);
         g = (float)(Math.random() * 255);
         b = (float)(Math.random() * 255);
-        a = 0;
-    }
-    public void setColor(float argR, float argG, float argB) {
-        r = argR;
-        g = argG;
-        b = argB;
         a = 0;
     }
 
@@ -141,10 +135,10 @@ class TriClass { // A triangle object
         }
     }
     public void zoom(float amount, PVector point) { // Reposition and rescales triangle based on scale factor and scale point
-        PVector difference = PVector.sub(position, point);
+        PVector difference = PVector.sub(pos, point);
         difference.mult(amount - 1);
-        position.add(difference);
-        length *= amount;
+        pos.add(difference);
+        len *= amount;
         calcCorners();
     }
     public void delete() { // Deletes this triangle
@@ -176,18 +170,36 @@ class TriClass { // A triangle object
         return true;
     }
     private void calcCorners() { // Calculate corners
-        topCorner = PVector.add(position, new PVector(length, 0).rotate(-PI/2));
-        rightCorner = PVector.add(position, new PVector(length, 0).rotate(PI/6));
-        leftCorner = PVector.add(position, new PVector(length, 0).rotate(-7 * PI/6));
+        PVector temp = new PVector(pos.x, pos.y);
+        PVector temp2 = new PVector(len, 0).rotate(-PI/2);
+        temp.x += temp2.x;
+        temp.y += temp2.y;
+        topCorner = temp;
+
+        temp = new PVector(pos.x, pos.y);
+        temp2 = new PVector(len, 0).rotate(PI/6);
+        temp.x += temp2.x;
+        temp.y += temp2.y;
+        rightCorner = temp;
+
+        temp = new PVector(pos.x, pos.y);
+        temp2 = new PVector(len, 0).rotate(-7 * PI/6);
+        temp.x += temp2.x;
+        temp.y += temp2.y;
+        leftCorner = temp;
+
+        //topCorner = PVector.add(pos, new PVector(len, 0).rotate(-PI/2));
+        //rightCorner = PVector.add(pos, new PVector(len, 0).rotate(PI/6));
+        //leftCorner = PVector.add(pos, new PVector(len, 0).rotate(-7 * PI/6));
     }
     private void split() { // Split the triangle into 3 smaller pieces
         // Spawn new children triangles
-        PVector tempPosition = PVector.add(position, new PVector(length/2, 0).rotate(-PI/2));
-        spawnTriangle(tempPosition.x, tempPosition.y, length/2);
-        tempPosition = PVector.add(position, new PVector(length/2, 0).rotate(PI/6));
-        spawnTriangle(tempPosition.x, tempPosition.y, length/2);
-        tempPosition = PVector.add(position, new PVector(length/2, 0).rotate(-7 * PI/6));
-        spawnTriangle(tempPosition.x, tempPosition.y, length/2);
+        PVector tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-PI/2));
+        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
+        tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(PI/6));
+        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
+        tempPosition = PVector.add(pos, new PVector(len/2, 0).rotate(-7 * PI/6));
+        spawnTriangle(tempPosition.x, tempPosition.y, len/2);
     }
     private void show() {
         fill(r, g, b, a);
@@ -205,7 +217,7 @@ class TriClass { // A triangle object
         return topCorner;
     }
     public float getLength() {
-        return length;
+        return len;
     }
     public boolean isFadingIn() {
         return fadingIn;
