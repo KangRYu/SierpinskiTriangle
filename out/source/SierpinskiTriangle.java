@@ -15,9 +15,9 @@ import java.io.IOException;
 public class SierpinskiTriangle extends PApplet {
 
 // Object arrays
-ArrayList<Triangle> allTriangles = new ArrayList<Triangle>();
-ArrayList<Triangle> trianglesToBeAdded = new ArrayList<Triangle>();
-ArrayList<Triangle> trianglesToBeRemoved = new ArrayList<Triangle>();
+ArrayList<TriClass> allTriangles = new ArrayList<TriClass>();
+ArrayList<TriClass> trianglesToBeAdded = new ArrayList<TriClass>();
+ArrayList<TriClass> trianglesToBeRemoved = new ArrayList<TriClass>();
 
 // Triangle states
 float maxTriangleLength = 80; // The largest possible triangle in length
@@ -31,9 +31,10 @@ public void setup() {
     
     noStroke();
     // Spawn triangles
-    allTriangles.add(new Triangle(width/2, height/2, currentTriangleLength)); // Spawn first triangle
+    allTriangles.add(new TriClass(width/2, height/2, currentTriangleLength)); // Spawn first triangle
     allTriangles.get(0).setColor();
     // Load a blank zoom point
+    println("BReAK");
     zoomPoint = new PVector();
 }
 
@@ -52,13 +53,13 @@ public void draw() {
 }
 
 public void spawnTriangle(float x, float y, float argLength) {
-    Triangle temp = new Triangle(x, y, argLength);
+    TriClass temp = new TriClass(x, y, argLength);
     temp.setColor();
     trianglesToBeAdded.add(temp);
 }
 
 public void zoom(float amount, PVector point) { // Zooms in all triangles
-    for(Triangle tri : allTriangles) {
+    for(TriClass tri : allTriangles) {
         tri.zoom(amount, point);
     }
     currentTriangleLength *= amount; // Update the current triangle length variable
@@ -66,23 +67,23 @@ public void zoom(float amount, PVector point) { // Zooms in all triangles
 
 public void updateTriangles() {
     // Updates every triangle
-    for(Triangle tri : allTriangles) {
+    for(TriClass tri : allTriangles) {
         tri.update();
     }
     // Remove triangles
-    for(Triangle tri : trianglesToBeRemoved) {
+    for(TriClass tri : trianglesToBeRemoved) {
         allTriangles.remove(tri);
     }
     trianglesToBeRemoved.clear();
     // Add triangles
-    for(Triangle tri : trianglesToBeAdded) {
+    for(TriClass tri : trianglesToBeAdded) {
         allTriangles.add(tri);
     }
     trianglesToBeAdded.clear();
 }
 
 public void splitAllTriangles() {
-    for(Triangle tri : allTriangles) {
+    for(TriClass tri : allTriangles) {
         if(!tri.isFadingOut()) {
             tri.split();
         }
@@ -91,11 +92,11 @@ public void splitAllTriangles() {
 }
 
 public void fadeOutAll() {
-    for(Triangle tri : allTriangles) {
+    for(TriClass tri : allTriangles) {
         tri.fadeOut();
     }
 }
-class Triangle { // A triangle object
+class TriClass { // A triangle object
     // Position Properties
     private PVector position;
     private float length; // The lenth of each corner from the center of the triangle
@@ -112,7 +113,7 @@ class Triangle { // A triangle object
     private boolean fadingOut = false;
 
     // Initialization functions
-    public Triangle(float x, float y, float argLength) {
+    public TriClass(float x, float y, float argLength) {
         // Save arguments
         position = new PVector(x, y);
         length = argLength;

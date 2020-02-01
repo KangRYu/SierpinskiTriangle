@@ -18,6 +18,7 @@ public void setup() {
     allTriangles.add(new TriClass(width/2, height/2, currentTriangleLength)); // Spawn first triangle
     allTriangles.get(0).setColor();
     // Load a blank zoom point
+    println("BReAK");
     zoomPoint = new PVector();
 }
 
