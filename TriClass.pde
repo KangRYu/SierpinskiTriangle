@@ -1,4 +1,4 @@
-class Triangle { // A triangle object
+class TriClass { // A triangle object
     // Position Properties
     private PVector position;
     private float length; // The lenth of each corner from the center of the triangle
@@ -15,7 +15,7 @@ class Triangle { // A triangle object
     private boolean fadingOut = false;
 
     // Initialization functions
-    public Triangle(float x, float y, float argLength) {
+    public TriClass(float x, float y, float argLength) {
         // Save arguments
         position = new PVector(x, y);
         length = argLength;

@@ -42,6 +42,7 @@ public void draw() {
     // Update zoom point
     zoomPoint.x = mouseX;
     zoomPoint.y = mouseY;
+    // Updates the triangles
     updateTriangles();
     zoom(zoomAmount, zoomPoint);
     if(currentTriangleLength > maxTriangleLength) {
